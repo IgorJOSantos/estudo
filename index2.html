@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha um Tópico</title>
+    <style>
+        :root {
+            --cor-laranja: #FF6000;
+            --cor-azul: #003087;
+            --cor-branca: #FFFFFF;
+            --cor-cinza: #f0f0f0;
+            --cor-preto: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-cinza);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+        }
+
+        .boas-vindas {
+            display: none;
+            background-color: var(--cor-branca);
+            border: 2px solid var(--cor-azul);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .boas-vindas h2 {
+            color: var(--cor-azul);
+            margin-bottom: 10px;
+        }
+
+        .topicos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            display: none;
+            white-space: pre-line;
+        }
+
+        .topico {
+            background-color: var(--cor-branca);
+            border: 2px solid var(--cor-laranja);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .topico:hover {
+            background-color: var(--cor-laranja);
+            color: var(--cor-branca);
+        }
+
+        .resposta {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--cor-branca);
+            border: 2px solid var(--cor-azul);
+            border-radius: 8px;
+            display: none;
+        }
+
+        #prosseguir {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--cor-laranja);
+            color: var(--cor-branca);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #prosseguir:hover {
+            background-color: var(--cor-azul);
+        }
+        #logout {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--cor-laranja);
+            color: var(--cor-branca);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #logout:hover {
+            background-color: var(--cor-azul);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Boas-Vindas -->
+        <div id="boas-vindas" class="boas-vindas">
+            <h2>Olá, me chamo Carol. Sua assistente virtual e vou te auxiliar no processo, <span id="nome-usuario"></span>.</h2>
+            <p>Vamos seguir?</p>
+            <button id="prosseguir">Prosseguir</button>
+        </div>
+        <button id="logout">logout</button>
+
+        <!-- Seção de Tópicos -->
+        <div id="topicos" class="topicos">
+            
+            <div class="topico" data-topico="1">Tive um acidente de trabalho, o que eu faço?</div>
+            <div class="topico" data-topico="2">Descontaram do meu salário, quem pode me auxiliar?</div>
+            <div class="topico" data-topico="3">Sou obrigado a fazer uma função que não é minha?</div>
+            <div class="topico" data-topico="4">Me envolvi numa briga com meu supervisor, o que devo fazer?</div>
+            <div class="topico" data-topico="5">Quais as funções que um aprendiz não pode exercer?</div>
+            <div class="topico" data-topico="12"></div>
+            <div class="topico" data-topico="12"></div>
+            <div class="topico" data-topico="6">Quanto tempo de contrato pode ser efetivado?</div>
+            <div class="topico" data-topico="7">A falta do curso de aprendizagem pode ser descontada do salário?</div>
+            <div class="topico" data-topico="8">Quais são os direitos trabalhistas do jovem aprendiz?</div>
+            <div class="topico" data-topico="9">Quais descontos podem ser feitos no salário do aprendiz?</div>
+            <div class="topico" data-topico="10">É permitido o trabalho do aprendiz aos domingos e feriados?</div>            
+            
+        </div>
+
+        <div id="resposta" class="resposta"></div>
+    </div>
+
+    <script>
+        // Recuperar o nome do usuário do localStorage
+        const nomeUsuario = localStorage.getItem('username');
+        const boasVindasDiv = document.getElementById('boas-vindas');
+        const topicosDiv = document.getElementById('topicos');
+        const respostaDiv = document.getElementById('resposta');
+        const nomeUsuarioSpan = document.getElementById('nome-usuario');
+        const prosseguirButton = document.getElementById('prosseguir');
+        const logoutButton = document.getElementById('logout');
+
+        // Dados dos tópicos e respostas
+        const respostas = {
+            1: "Após a notificação do acidente, cabe à empresa comunicar à Previdência Social todo e qualquer acidente ocorrido com seus empregados, através da emissão da Comunicação de Acidente de Trabalho(CAT), registro que deve ser feito de imediato no caso de morte ou até o primeiro dia útil seguinte à data do acidente.",
+            2: "Sim. Desconto no salário é permitido, desde que sejam seguidas algumas diretrizes específicas das leis do trabalho. Esse tema gera um pouco de confusão, pois todos os descontos no salário devem rspeitar algumas regras da legislação. Por isso, é essencial que os jovens aprendizes saibam exatamente quais são os descontos permitidos pela lei, e quais não são. ",
+            3: "Você somente é obrigado a fazer a função a qual fora contratada. Se foi contratada como fiscal de caixa, e sua CTPS está assinada assim, então não faz sentido você cumprir outra função, executando se houver alteração contratual neste sentido. ",
+            4: "4 dicas para lidas com gestão de conflitos no ambiente de trabalho:1 investigue as causas mais a fundo. 2 Mantenha um accountability dos conflitos. 3 Incentive feedbacks diretos. 4 Procure resolver todas as questões. ",
+            5: "O Aprendiz não pode realizar horas extras, nem trabalhar aos sábados, domingos e feriados. Durante esse período ele está sob responsabilidade da empresa e, portanto, não deve ser atribuído ao aprendiz tarefas como entrgar correspondências, ir ao banco, correios ou fazer compras fora do perímetro da empresa. ",
+            6: "O contrato de trabalho por prazo determinado (Lei 9.601/1998) é o mesmo, mas as partes podem ir estendendo a sua duração, desde que não ultrapasse o limite de 2 anos. Dentro dess limite, o contrato por prazo determinado pode ser prorrogado tantas vezes desejarem as partes, sem que ele se torno prazo indeterminado.",
+            7: "Sim, pois as horas dedicadas às atividades teóricas também integram a jornada do aprendiz, podendo ser descontadas as faltas que não forem legalmente justificadas (art. 131 da CLT) ou autorizadas pelo empregador, inclusive com reflexos no recebimento de repouso semanal remunerado e nos eventuais feeriados da semana. ",
+            8: "1)Carteira de trabalho assinada.2)Jornada de trabalho reduzida.3)Salário-mínimo proporcional as horas trabalhadas.4)Férias remuneradas.5)Férias coletivas são licença remunerada.6)13° salário. ",
+            9: "De Acordo com a CLT, são permitidos os seguintes descontos no salário do Jovem Aprendiz: INSS-empregado 8%. Falta injustificadas Contribuições Sindicais.",
+            10: "O trabalho aos feriados não é permitido para o Jovem Aprendiz, pois exigiria a concessão de folga semanal compensatória, conforme determinação legal, o que é vedada aos aprendizes nos termos do art. 432 da CLT.",
+        };
+
+        // Exibir a tela de boas-vindas
+        if (nomeUsuario) {
+            nomeUsuarioSpan.textContent = nomeUsuario;
+            boasVindasDiv.style.display = 'block';
+        } else {
+            // Se o nome do usuário não estiver no localStorage, redirecionar para o login
+            window.location.href = "login.html";
+        }
+
+        // Evento para o botão "Prosseguir"
+        prosseguirButton.addEventListener('click', () => {
+            boasVindasDiv.style.display = 'none';
+            topicosDiv.style.display = 'grid';
+        });
+
+        // Evento para o botão de Logout
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('username'); // Limpar o nome do usuário do localStorage
+            window.location.href = "index.html"; // Redirecionar para a página de login
+        });
+
+        // Adicionar evento de clique aos tópicos
+        document.querySelectorAll('.topico').forEach(topico => {
+            topico.addEventListener('click', () => {
+                const topicoId = topico.getAttribute('data-topico');
+                respostaDiv.textContent = respostas[topicoId];
+                respostaDiv.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
