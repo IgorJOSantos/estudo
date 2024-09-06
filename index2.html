@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha um Tópico</title>
+    <title>Assistente Virtual</title>
     <style>
         :root {
             --cor-laranja: #FF6000;
@@ -101,6 +101,7 @@
         #prosseguir:hover {
             background-color: var(--cor-azul);
         }
+
         #logout {
             position: fixed;
             bottom: 20px;
@@ -118,6 +119,50 @@
         #logout:hover {
             background-color: var(--cor-azul);
         }
+
+        /* Modal CSS */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--cor-branca);
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid var(--cor-laranja);
+            max-width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+
+        .modal-close {
+            color: var(--cor-preto);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: var(--cor-laranja);
+        }
+
+        @media (max-width: 768px) {
+            /* Exibir modal sempre em dispositivos móveis */
+            .resposta {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -132,7 +177,6 @@
 
         <!-- Seção de Tópicos -->
         <div id="topicos" class="topicos">
-            
             <div class="topico" data-topico="1">Tive um acidente de trabalho, o que eu faço?</div>
             <div class="topico" data-topico="2">Descontaram do meu salário, quem pode me auxiliar?</div>
             <div class="topico" data-topico="3">Sou obrigado a fazer uma função que não é minha?</div>
@@ -144,24 +188,30 @@
             <div class="topico" data-topico="7">A falta do curso de aprendizagem pode ser descontada do salário?</div>
             <div class="topico" data-topico="8">Quais são os direitos trabalhistas do jovem aprendiz?</div>
             <div class="topico" data-topico="9">Quais descontos podem ser feitos no salário do aprendiz?</div>
-            <div class="topico" data-topico="10">É permitido o trabalho do aprendiz aos domingos e feriados?</div>            
-            
+            <div class="topico" data-topico="10">É permitido o trabalho do aprendiz aos domingos e feriados?</div>
         </div>
 
-        <div id="resposta" class="resposta"></div>
+        <!-- Modal para exibir a resposta -->
+        <div id="resposta-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+                <p id="resposta-modal-text"></p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // Recuperar o nome do usuário do localStorage
         const nomeUsuario = localStorage.getItem('username');
         const boasVindasDiv = document.getElementById('boas-vindas');
         const topicosDiv = document.getElementById('topicos');
-        const respostaDiv = document.getElementById('resposta');
         const nomeUsuarioSpan = document.getElementById('nome-usuario');
         const prosseguirButton = document.getElementById('prosseguir');
         const logoutButton = document.getElementById('logout');
+        const modal = document.getElementById('resposta-modal');
+        const modalText = document.getElementById('resposta-modal-text');
+        const modalClose = document.querySelector('.modal-close');
 
-        // Dados dos tópicos e respostas
         const respostas = {
             1: "Após a notificação do acidente, cabe à empresa comunicar à Previdência Social todo e qualquer acidente ocorrido com seus empregados, através da emissão da Comunicação de Acidente de Trabalho(CAT), registro que deve ser feito de imediato no caso de morte ou até o primeiro dia útil seguinte à data do acidente.",
             2: "Sim. Desconto no salário é permitido, desde que sejam seguidas algumas diretrizes específicas das leis do trabalho. Esse tema gera um pouco de confusão, pois todos os descontos no salário devem rspeitar algumas regras da legislação. Por isso, é essencial que os jovens aprendizes saibam exatamente quais são os descontos permitidos pela lei, e quais não são. ",
@@ -173,37 +223,43 @@
             8: "1)Carteira de trabalho assinada.2)Jornada de trabalho reduzida.3)Salário-mínimo proporcional as horas trabalhadas.4)Férias remuneradas.5)Férias coletivas são licença remunerada.6)13° salário. ",
             9: "De Acordo com a CLT, são permitidos os seguintes descontos no salário do Jovem Aprendiz: INSS-empregado 8%. Falta injustificadas Contribuições Sindicais.",
             10: "O trabalho aos feriados não é permitido para o Jovem Aprendiz, pois exigiria a concessão de folga semanal compensatória, conforme determinação legal, o que é vedada aos aprendizes nos termos do art. 432 da CLT.",
+        
         };
 
-        // Exibir a tela de boas-vindas
         if (nomeUsuario) {
             nomeUsuarioSpan.textContent = nomeUsuario;
             boasVindasDiv.style.display = 'block';
         } else {
-            // Se o nome do usuário não estiver no localStorage, redirecionar para o login
             window.location.href = "login.html";
         }
 
-        // Evento para o botão "Prosseguir"
         prosseguirButton.addEventListener('click', () => {
             boasVindasDiv.style.display = 'none';
             topicosDiv.style.display = 'grid';
         });
 
-        // Evento para o botão de Logout
         logoutButton.addEventListener('click', () => {
-            localStorage.removeItem('username'); // Limpar o nome do usuário do localStorage
-            window.location.href = "index.html"; // Redirecionar para a página de login
+            localStorage.removeItem('username');
+            window.location.href = "index.html";
         });
 
-        // Adicionar evento de clique aos tópicos
         document.querySelectorAll('.topico').forEach(topico => {
             topico.addEventListener('click', () => {
                 const topicoId = topico.getAttribute('data-topico');
-                respostaDiv.textContent = respostas[topicoId];
-                respostaDiv.style.display = 'block';
+                modalText.textContent = respostas[topicoId];
+                modal.style.display = 'flex'; // Exibe o modal
             });
         });
+
+        modalClose.addEventListener('click', () => {
+            modal.style.display = 'none'; // Fecha o modal ao clicar no "X"
+        });
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none'; // Fecha o modal ao clicar fora dele
+            }
+        };
     </script>
 </body>
 </html>
