@@ -167,8 +167,20 @@
             }
 
             /* Exibe modal sempre em dispositivos móveis */
-            .modal {
-                display: flex !important;
+            .modal {.modal {
+    display: none; /* Modal ficará oculto inicialmente */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
             }
         }
     </style>
