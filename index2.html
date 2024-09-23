@@ -213,7 +213,8 @@
             <div class="topico" data-topico="7">A falta do curso de aprendizagem pode ser descontada do salário?</div>
             <div class="topico" data-topico="8">Quais são os direitos trabalhistas do jovem aprendiz?</div>
             <div class="topico" data-topico="9">Quais descontos podem ser feitos no salário do aprendiz?</div>
-            <div class="topico" data-topico="10">É permitido o trabalho do aprendiz aos domingos e feriados?</div>            
+            <div class="topico" data-topico="10">É permitido o trabalho do aprendiz aos domingos e feriados?</div>
+            <div class="topico" data-topico="11">Quer saber mais sobre as leis do aprendiz?</div>
             </div>
 
         <!-- Modal para exibir a resposta -->
@@ -248,6 +249,7 @@
             8: "1)Carteira de trabalho assinada.2)Jornada de trabalho reduzida.3)Salário-mínimo proporcional as horas trabalhadas.4)Férias remuneradas.5)Férias coletivas são licença remunerada.6)13° salário. ",
             9: "De Acordo com a CLT, são permitidos os seguintes descontos no salário do Jovem Aprendiz: INSS-empregado 8%. Falta injustificadas Contribuições Sindicais.",
             10: "O trabalho aos feriados não é permitido para o Jovem Aprendiz, pois exigiria a concessão de folga semanal compensatória, conforme determinação legal, o que é vedada aos aprendizes nos termos do art. 432 da CLT.",
+            11: "https://blog.empregare.com/lei-do-jovem-aprendiz/amp/"
         };
 
         if (nomeUsuario) {
@@ -273,6 +275,13 @@
                 const resposta = respostas[topicoId] || 'Resposta não encontrada.';
                 modalText.textContent = resposta;
                 modal.style.display = 'flex';
+
+                if (topicoId == 11) {
+                window.open(resposta, 'https://blog.empregare.com/lei-do-jovem-aprendiz/amp/'); // Abre o link em uma nova aba
+                } else {
+                modalText.textContent = resposta;
+            modal.style.display = 'flex';
+                }
             });
         });
 
